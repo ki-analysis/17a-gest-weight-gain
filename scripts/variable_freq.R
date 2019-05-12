@@ -2,12 +2,17 @@
 
 library(tidyverse)
 library(synapser)
+library(viridis)
 synapser::synLogin(rememberMe = TRUE)
+options(tibble.width = Inf)
 
 rmote::start_rmote()
 
 # Read and format data
-d <- readr::read_csv("/data/git/hbgd/rally-17/Sprint\ A/adam/rally_17.csv")
+# d <- readr::read_csv("/data/git/hbgd/rally-17/Sprint\ A/adam/rally_17.csv")
+
+d <- readr::read_csv("data/raw_data/rally_17.csv")
+
 names(d) <- tolower(names(d))
 # get rid of ki... prefixes in study IDs
 d$studyid <- gsub("^ki[0-9]+\\-(.*)", "\\1", d$studyid)
@@ -36,8 +41,12 @@ d %>%
 # TODO: Plot of number of non-NA values for each subject-level variable, by study
 # do free scale for count axis
 
+### I did this by study and number of mother measures (see dat_vars_by_number_women_prebirth_measures.R)
+
 # TODO: Heatmap of number of non-NA subject-level variables, by study
 # maybe broken down into categories etc.
+
+
 
 # TODO: Plot of number of subjects with x non-NA subject-level variables
 # Detail: for each subject, select just subject-level variables

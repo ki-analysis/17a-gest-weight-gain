@@ -1,33 +1,16 @@
 # install.packages("synapser", repos=c("http://ran.synapse.org", "http://cran.fhcrc.org"))
 
+source("scripts/_fns.R")
+
 library(tidyverse)
 library(synapser)
 library(viridis)
-synapser::synLogin(rememberMe = TRUE)
 options(tibble.width = Inf)
 
 rmote::start_rmote()
 
-# Read and format data
-# d <- readr::read_csv("/data/git/hbgd/rally-17/Sprint\ A/adam/rally_17.csv")
-
-d <- readr::read_csv("data/raw_data/rally_17.csv")
-
-names(d) <- tolower(names(d))
-# get rid of ki... prefixes in study IDs
-d$studyid <- gsub("^ki[0-9]+\\-(.*)", "\\1", d$studyid)
-d$studyid <- gsub("kiGH5241\\-", "", d$studyid)
-
-# Read and format data spec
-f <- synapser::synGet("syn18671277")
-data_spec <- readxl::read_xlsx(f$path)
-names(data_spec) <- tolower(names(data_spec))
-names(data_spec)[6] <- "longitudinal"
-data_spec <- data_spec %>%
-  mutate(
-    varnam = tolower(varnam),
-    longitudinal = ifelse(longitudinal == "Yes", TRUE, FALSE)
-  )
+d <- read_data(path)
+data_spec <- read_data_spec()
 
 table(data_spec$longitudinal)
 # FALSE  TRUE 
@@ -36,7 +19,6 @@ table(data_spec$longitudinal)
 # For all of the plots below, just look at mothers with non-na m_wtkg and agedays <= 0
 d %>%
   filter(!is.na(m_wtkg) & agedays <= 0) # %>% ...
-
 
 # TODO: Plot of number of non-NA values for each subject-level variable, by study
 # do free scale for count axis

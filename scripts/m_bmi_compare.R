@@ -7,6 +7,8 @@ library(tidyverse)
 library(synapser)
 library(viridis)
 options(tibble.width = Inf)
+synapser::synLogin(rememberMe = TRUE)
+
 
 rmote::start_rmote()
 
@@ -57,3 +59,6 @@ wf2 <- wf %>%
   mutate(gagewks = floor(gagedays / 7))
 
 # Use this dataset to answer question
+
+write_rds(wf2, path = "data/derived_data/women_first_bmi.rds")
+# See m_bmi_plot.R for visualization
